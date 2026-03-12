@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken')
 
-module.expots = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
 
     // precheck to see if the request will go through
     // mostly for CORS errors
     if(req.method === 'OPTIONS') {
         return next()
     }
-
+    
     try {
         // we only want the token part of the header, not bearer
         const token = req.headers.authorization?.split(' ')[1]
@@ -36,4 +36,20 @@ module.expots = (req, res, next) => {
     }
 }
 
-module.exports = authMiddleware
+
+// for users to submit without being logged in
+// if logged in or not logged in they move through next() anyways
+const optionalAuth = (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1]
+        if (token) {
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+            req.user = decodedToken
+        }
+        next()
+    } catch (err) {
+        next()
+    }
+}
+
+module.exports = { authMiddleware, optionalAuth }

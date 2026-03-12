@@ -12,7 +12,7 @@ const QuizResult = sequelize.define(
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     dq_id: {
       type: DataTypes.INTEGER,

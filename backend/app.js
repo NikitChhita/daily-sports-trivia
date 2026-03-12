@@ -5,6 +5,8 @@ const { connectDB, sequelize } = require('./config/db')
 const { fetchDailyQuiz } = require('./jobs/fetchDailyQuiz')
 const quizRoutes = require('./routes/quizRoutes')
 const authRoutes = require('./routes/authRoutes')
+const statsRoutes = require('./routes/statsRoutes')
+
 
 
 // Node will read .env file and process variables
@@ -19,6 +21,7 @@ app.use(express.json())
 // Tell express where to mount
 app.use('/quiz', quizRoutes)
 app.use('/auth', authRoutes)
+app.use('/stats', statsRoutes)
 
 const startServer = async () => {
     await connectDB()
