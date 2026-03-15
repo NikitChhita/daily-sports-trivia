@@ -1,4 +1,4 @@
-# daily-sports-trivia
+# Daily-Sports-Trivia
 Daily sports trivia application with leaderboards and stat tracking. 
 
 ## Tech Stack
