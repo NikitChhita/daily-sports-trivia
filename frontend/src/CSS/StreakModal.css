@@ -1,0 +1,182 @@
+.streak-panel {
+    background-color: #1a1f2e;
+    border-radius: 12px;
+    padding: 17px;
+    width: 231px;
+    animation: fadeIn 1.2s ease;
+}
+
+.streak-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.streak-month {
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.streak-nav-btn {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.01rem;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.streak-nav-btn:hover {
+    background-color: #374151;
+    color: white;
+}
+
+.streak-nav-btn:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.streak-calendar {
+    margin-bottom: 14px;
+}
+
+.streak-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+}
+
+.streak-weekday {
+    text-align: center;
+    font-size: 0.542rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.streak-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.streak-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: relative;
+    border: 1px solid #374151;
+}
+
+.streak-day.empty {
+    border: none;
+}
+
+.streak-day-number {
+    font-size: 0.542rem;
+    color: #9ca3af;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.streak-day-icon {
+    font-size: 0.398rem;
+    line-height: 1;
+    position: absolute;
+    bottom: 2px;
+}
+
+.streak-day.today {
+    background-color: #7837e7;
+    border-color: #8051d7;
+}
+
+.streak-day.today .streak-day-number {
+    color: white;
+    font-weight: 700;
+}
+
+.streak-day.future {
+    border-color: #1f2937;
+}
+
+.streak-day.future .streak-day-number {
+    color: #374151;
+}
+
+.streak-day.played {
+    border-color: #0c341b;
+    background-color: #0c582c;
+}
+
+.streak-day.played .streak-day-number {
+    color: #22c55e;
+    font-size: 0.47rem;
+}
+
+.streak-day.played .streak-day-icon {
+    color: #22c55e;
+}
+
+.streak-day.missed {
+    border-color: #ef4444;
+    border-style: dashed;
+}
+
+.streak-day.missed .streak-day-number {
+    color: #6b7280;
+    font-size: 0.47rem;
+}
+
+.streak-day.missed .streak-day-icon {
+    color: #ef4444;
+}
+
+.streak-footer {
+    display: flex;
+    gap: 9px;
+    border-top: 1px solid #374151;
+    padding-top: 12px;
+}
+
+.streak-stat {
+    flex: 1;
+    background-color: #111827;
+    border-radius: 7px;
+    padding: 9px;
+}
+
+.streak-stat-label {
+    display: block;
+    font-size: 0.542rem;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.streak-stat-value {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 1100px) {
+    .streak-panel {
+        display: none;
+    }
+}

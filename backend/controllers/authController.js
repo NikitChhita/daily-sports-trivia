@@ -47,7 +47,8 @@ const register = async (req, res) => {
         user: {
             user_id: user.user_id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            created_at: user.created_at
         }
     })
   } catch(err) {
@@ -64,7 +65,7 @@ const login = async (req, res) => {
         // find user by email
         const user = await User.findOne({ where: { email } })
         if(!user) {
-            return res.status(401).json({ message: 'Invalid credentials' })
+            return res.status(401).json({ message: 'Email or Password incorrect' })
         }
 
         // generating JWT token
@@ -79,7 +80,8 @@ const login = async (req, res) => {
             user: {
                 user_id: user.user_id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                created_at: user.created_at
             }
         })
     } catch(err) {

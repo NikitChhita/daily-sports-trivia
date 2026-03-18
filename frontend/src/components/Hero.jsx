@@ -2,28 +2,42 @@ import "../CSS/Hero.css";
 import { useQuiz } from "../context/QuizContext";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { TypingAnimation } from '../components/ui/typing-animation'
+import { TypingAnimation } from "../components/ui/typing-animation";
+import {  Accordion,  AccordionContent, AccordionItem,AccordionTrigger,} from "@/components/ui/accordion"
 
-const Hero = ({ onLoginClick }) => {
+const Hero = ({ onLoginClick, onPlay }) => {
   const { gameState, setGameState } = useQuiz();
   const { isLoggedIn, token } = useAuth();
   const [playedToday, setPlayedToday] = useState(false);
-
+  const [hasFinished, setHasFinished] = useState(() => localStorage.getItem("quiz_finished"))
   const hasProgress = localStorage.getItem("quiz_progress");
-  const hasFinished = localStorage.getItem("quiz_finished");
 
   // too much is currently determined on localstorage (might need to refactor)
   // check if logged in user has already played today
   useEffect(() => {
     const checkStatus = async () => {
-      if (!isLoggedIn) return;
+      
       try {
+        // only send the token if logged in otherwise dont send the header (no point)
         const res = await fetch("http://localhost:8080/quiz/status", {
-          headers: { Authorization: `Bearer ${token}` },
+          ...(isLoggedIn && { headers: { Authorization: `Bearer ${token}` } })
         });
         const data = await res.json();
-        if (data.played) {
+
+        if (isLoggedIn && data.played) {
           setPlayedToday(true);
+        }
+
+        // for the guests if quiz_finished matches todays dq_id or needs to reset
+        if (!isLoggedIn) {
+          const finished = localStorage.getItem("quiz_finished");
+          if (finished && finished !== data.dq_id.toString()) {
+            //clear the day since the dq_id doesnt match
+            localStorage.removeItem("quiz_finished");
+            localStorage.removeItem("quiz_answers");
+            localStorage.removeItem("quiz_progress");
+            setHasFinished(null)
+          }
         }
       } catch (err) {
         console.error("Error checking quiz status", err);
@@ -32,7 +46,6 @@ const Hero = ({ onLoginClick }) => {
     checkStatus();
   }, [isLoggedIn]);
 
-
   const getButtonLabel = () => {
     if (isLoggedIn && playedToday) return "View Results";
     if (!isLoggedIn && hasFinished) return "View Results";
@@ -40,14 +53,13 @@ const Hero = ({ onLoginClick }) => {
     return "Play";
   };
 
-  
   const handlePlay = () => {
     if (isLoggedIn && playedToday) {
       setGameState("finished");
     } else if (!isLoggedIn && hasFinished) {
       setGameState("finished");
     } else {
-      setGameState("playing");
+      onPlay()
     }
   };
 
@@ -59,15 +71,13 @@ const Hero = ({ onLoginClick }) => {
         <img src="/ai_img.png" alt="Sports Quiz Logo" className="hero-logo" />
 
         <h1 className="hero-title">
-          <TypingAnimation duration={80}>
-          Sports Trivia
-          </TypingAnimation>
-          </h1>
+          <TypingAnimation duration={80}>Sports Trivia</TypingAnimation>
+        </h1>
         <p className="hero-subtitle">
           <TypingAnimation duration={50} delay={1200}>
-          Test your sports knowledge daily!
+            Test your sports knowledge daily!
           </TypingAnimation>
-          </p>
+        </p>
 
         <div className="hero-buttons">
           <button className="btn-primary" onClick={handlePlay}>
@@ -91,9 +101,29 @@ const Hero = ({ onLoginClick }) => {
       </div>
 
       <div className="hero-info">
-        <p>Questions sourced from the Open Trivia Database</p>
-        <p>10 questions daily containing mixed difficulty levels</p>
-        <p>A new quiz resets every day at midnight</p>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+           <AccordionTrigger>Where do questions from?</AccordionTrigger>
+              <AccordionContent>
+              Questions sourced from the Open Trivia Database
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2">
+           <AccordionTrigger>What is the quiz's difficulty level?</AccordionTrigger>
+              <AccordionContent>
+              10 questions daily containing mixed difficulty levels
+              </AccordionContent>
+            </AccordionItem>
+
+
+          <AccordionItem value="item-3">
+           <AccordionTrigger>When does the quiz reset?</AccordionTrigger>
+              <AccordionContent>
+               A new quiz resets every day at midnight
+              </AccordionContent>
+            </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

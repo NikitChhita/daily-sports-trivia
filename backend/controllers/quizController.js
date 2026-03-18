@@ -133,15 +133,16 @@ const submitQuiz = async (req, res) => {
     });
 
     // save each individual answer
+    const userAnswers = answers.map((a) => ({
+      qr_id: quizResult.qr_id,
+      question_id: a.question_id,
+      user_id: user_id || null,
+      selected_answer: a.selected_answer,
+      is_correct: a.is_correct,
+    }));
+    await UserAnswer.bulkCreate(userAnswers);
+
     if (user_id) {
-      const userAnswers = answers.map((a) => ({
-        qr_id: quizResult.qr_id,
-        question_id: a.question_id,
-        user_id: user_id || null,
-        selected_answer: a.selected_answer,
-        is_correct: a.is_correct,
-      }));
-      await UserAnswer.bulkCreate(userAnswers);
       await updateStreak(user_id);
     }
 

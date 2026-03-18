@@ -1,18 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Spinner } from "./ui/spinner";
 import "../CSS/AuthModal.css";
 
 const AuthModal = ({ onClose }) => {
   const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [closing, setClosing] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+
+  // run once on mount
+  useEffect(() => {
+    // lock scroll on main page when modal opens
+    document.body.style.overflow = 'hidden'
+    // unlock scroll 
+    return () => {
+        document.body.style.overflow = 'unset'
+    }
+}, [])
 
   const handleClose = () => {
     setClosing(true);
@@ -24,24 +33,20 @@ const AuthModal = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
-    setError('');
+    setError("");
 
-    // make sure the form has data 
     if (!formData.email || !formData.password) {
-        setError('Please fill in all fields')
-        return
+      setError("Please fill in all fields");
+      return;
     }
     if (!isLogin && !formData.username) {
-        setError('Please enter a username')
-        return
+      setError("Please enter a username");
+      return;
     }
     if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters')
-        return
+      setError("Password must be at least 6 characters");
+      return;
     }
-
-
-
 
     setLoading(true);
 
@@ -66,9 +71,17 @@ const AuthModal = ({ onClose }) => {
         setLoading(false);
         return;
       }
+      
+      // artifical loading for looks
+      await new Promise(resolve => setTimeout(resolve, 300));
+      // artifical loading
+      setLoading(false);
+      setSuccess(true);
+      setTimeout(() => {
+        login(data.user, data.token);
+        handleClose();
+      }, 800);
 
-      login(data.user, data.token);
-      handleClose();
     } catch (err) {
       setError("Something went wrong, please try again");
       setLoading(false);
@@ -78,97 +91,118 @@ const AuthModal = ({ onClose }) => {
   return (
     <div
       className={`auth-overlay ${closing ? "auth-closing" : ""}`}
-      onClick={handleClose}
+      onClick={!loading && !success ? handleClose : undefined}
     >
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="auth-logo">
-          <img src="/ai_img.png" alt="logo" />
-        </div>
 
-        <h2 className="auth-title">
-          {isLogin ? "Log in to your account" : "Create your account"}
-        </h2>
-        <p className="auth-subtitle">
-          {isLogin
-            ? "Welcome back! Please enter your details."
-            : "Start tracking your stats and streaks."}
-        </p>
-
-        <div className="auth-tabs">
-          <button
-            className={`auth-tab ${isLogin ? "active" : ""}`}
-            onClick={() => { setIsLogin(true); setError('')}}
-          >
-            Log in
-          </button>
-          <button
-            className={`auth-tab ${!isLogin ? "active" : ""}`}
-            onClick={() => { setIsLogin(false); setError('')}}
-          >
-            Sign up
-          </button>
-        </div>
-
-        {error && <p className="auth-error">{error}</p>}
-
-        {!isLogin && (
-          <div className="auth-field">
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleChange}
-            />
+        {loading && (
+          <div className="auth-loading-state">
+            <Spinner className="auth-spinner" />
+            <p className="auth-loading-text">
+              {isLogin ? "Signing you in..." : "Creating your account..."}
+            </p>
           </div>
         )}
 
-        <div className="auth-field">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </div>
+        {success && (
+          <div className="auth-loading-state">
+            <div className="auth-success-icon">✓</div>
+            <p className="auth-loading-text">
+              {isLogin ? "Welcome back!" : "Account created!"}
+            </p>
+          </div>
+        )}
 
-        <div className="auth-field">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="••••••••"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
+        {!loading && !success && (
+          <>
+            <div className="auth-logo">
+              <img src="/ai_img.png" alt="logo" />
+            </div>
 
-        <button
-          className="auth-submit"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : isLogin ? "Sign in" : "Sign up"}
-        </button>
+            <h2 className="auth-title">
+              {isLogin ? "Log in to your account" : "Create your account"}
+            </h2>
+            <p className="auth-subtitle">
+              {isLogin
+                ? "Welcome back! Please enter your details."
+                : "Start tracking your stats and streaks."}
+            </p>
 
-        <div className="auth-divider">
-          <span>OR</span>
-        </div>
+            <div className="auth-tabs">
+              <button
+                className={`auth-tab ${isLogin ? "active" : ""}`}
+                onClick={() => { setIsLogin(true); setError(""); }}
+              >
+                Log in
+              </button>
+              <button
+                className={`auth-tab ${!isLogin ? "active" : ""}`}
+                onClick={() => { setIsLogin(false); setError(""); }}
+              >
+                Sign up
+              </button>
+            </div>
 
-        <button className="auth-google">
-          <img src="/google-color-svgrepo-com.svg" width="30" height="30" alt="Google" />
-          {isLogin ? 'Sign in with Google' : 'Sign Up with Google'}
-        </button>
+            {error && <p className="auth-error">{error}</p>}
 
-        <p className="auth-toggle">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <span onClick={() => { setIsLogin(!isLogin); setError('') }}>
-            {isLogin ? "Sign up" : "Log in"}
-          </span>
-        </p>
+            {!isLogin && (
+              <div className="auth-field">
+                <label>Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Enter your username"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
+
+            <div className="auth-field">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                onKeyDown={ (e) => e.key === 'Enter' && handleSubmit() }
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                onKeyDown={ (e) => e.key === 'Enter' && handleSubmit() }
+              />
+            </div>
+
+            <button className="auth-submit" onClick={handleSubmit}>
+              {isLogin ? "Sign in" : "Sign up"}
+            </button>
+
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
+
+            <button className="auth-google">
+              <img src="/google-color-svgrepo-com.svg" width="30" height="30" alt="Google" />
+              {isLogin ? "Sign in with Google" : "Sign up with Google"}
+            </button>
+
+            <p className="auth-toggle">
+              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              <span onClick={() => { setIsLogin(!isLogin); setError(""); }}>
+                {isLogin ? "Sign up" : "Log in"}
+              </span>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

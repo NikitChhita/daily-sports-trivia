@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuiz } from "../context/QuizContext";
 import { useAuth } from "../context/AuthContext";
+import BackgroundBeams from "./ui/beams";
 import "../CSS/Quiz.css";
 
 const Quiz = () => {
@@ -103,6 +104,17 @@ const Quiz = () => {
           score: newScore,
         }),
       );
+      // if this is the last question, save answers for results display
+      if (currentQuestion + 1 >= questions.length) {
+        localStorage.setItem(
+          "quiz_answers",
+          JSON.stringify({
+            answers: newAnswers,
+            score: newScore,
+            dq_id: quiz.dq_id,
+          }),
+        );
+      }
     } catch (err) {
       console.error("Error submitting answer", err);
     }
@@ -162,7 +174,17 @@ const Quiz = () => {
   };
 
   return (
-    <div className="quiz">
+
+     <div className="relative h-screen w-screen overflow-hidden ">
+      
+      {/* 🔥 Background */}
+      <div className="absolute inset-0 -z-0 pointer-events-none opacity-100 ">
+        <div className="w-full h-full blur-[4px]">
+        <BackgroundBeams />
+        </div>
+      </div>
+
+    <div className="relative z-10 quiz">
       <button className="btn-back" onClick={() => setGameState("landing")}>
         ‹
       </button>
@@ -205,6 +227,7 @@ const Quiz = () => {
           </button>
         )}
       </div>
+     </div>
     </div>
   );
 };

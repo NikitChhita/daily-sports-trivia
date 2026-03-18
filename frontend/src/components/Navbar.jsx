@@ -1,15 +1,30 @@
 import '../CSS/Navbar.css'
 import { useAuth } from '../context/AuthContext'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ChevronDown, LogOutIcon, UserIcon, SettingsIcon } from 'lucide-react'
+import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel, DropdownMenuSeparator,DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
 
-const Navbar = ({ onLoginClick }) => {
-
+const Navbar = ({ onLoginClick, onStreakClick, showStreak }) => {
   const { isLoggedIn, user, logout } = useAuth()
   const [showDropdown, setShowDropdown] = useState(false)
+  const [quizNumber, setQuizNumber] = useState(null)
+
+  useEffect(() => {
+    const fetchQuizNumber = async () => {
+        try {
+        const res = await fetch('http://localhost:8080/quiz/status');
+        const data = await res.json();
+        setQuizNumber(data.dq_id)
+        } catch(err) {
+            console.error('Error fetching quiz number', err)
+        }
+    }
+    fetchQuizNumber()
+  }, [])
   
   return (
     <nav className="navbar">
-      <span className="navbar-title">Daily Sports Trivia -  #?</span>
+      <span className="navbar-title">Daily Sports Trivia {quizNumber && `#${quizNumber}`} </span>
       <div className="navbar-actions">
         <a href="https://github.com/NikitChhita/daily-sports-trivia" target="_blank" rel="noreferrer" className="btn-github">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '11px', verticalAlign: 'middle'}}>
@@ -19,18 +34,32 @@ const Navbar = ({ onLoginClick }) => {
         </a>
 
          {isLoggedIn ? (
-                    <div className="navbar-user" onClick={() => setShowDropdown(!showDropdown)}>
-                        <img src="/user-circle-svgrepo-com.svg" width="28" height="28" alt="user" className="user-icon" />
-                        <span className="user-name">{user.username}</span>
-                        <span className="dropdown-arrow">▾</span>
-                        {showDropdown && (
-                            <div className="dropdown-menu">
-                                <button className="dropdown-item" onClick={logout}>
-                                    Log out
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button className="navbar-user">
+                                <img src="/user-circle-svgrepo-com.svg" width="24" height="24" alt="user" className="user-icon" />
+                                <span className="user-name">{user?.username}</span>
+                                <ChevronDown size={14} color="#9ca3af" />
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <UserIcon />
+                            Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <SettingsIcon />
+                            Settings
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive" onClick={logout}>
+                            <LogOutIcon />
+                            Log out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                    </DropdownMenu>
                 ) : (
                     <button className="btn-login" onClick={onLoginClick}>
                         Login
