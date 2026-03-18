@@ -7,39 +7,48 @@ const {
 } = require("../models/index");
 
 const updateStreak = async (user_id) => {
-  const streak = await Streak.findOne({ where: { user_id }})
-  if(!streak) { return }
-  
-  const today = new Date().toISOString().split('T')[0]
-  const lastPlayed = streak.last_played_date
+  const streak = await Streak.findOne({ where: { user_id } });
+  if (!streak) {
+    return;
+  }
+
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "America/New_York",
+  });
+  const lastPlayed = streak.last_played_date;
 
   // dont update streak again
-  if(lastPlayed === today) { return }
+  if (lastPlayed === today) {
+    return;
+  }
 
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().split('T')[0]
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
 
   // let since newStreaks value will be changing
   let newStreak;
   // if you played yesyerday and day then update streak
-  if(lastPlayed === yesterdayStr) {
-    newStreak = streak.current_streak + 1
-  } else { // you didnt play yesterday so streak resets
+  if (lastPlayed === yesterdayStr) {
+    newStreak = streak.current_streak + 1;
+  } else {
+    // you didnt play yesterday so streak resets
     newStreak = 1;
   }
 
   await streak.update({
     current_streak: newStreak,
     longest_streak: Math.max(newStreak, streak.longest_streak),
-    last_played_date: today
-  })
-}
+    last_played_date: today,
+  });
+};
 
 // GET /quiz/today — returns today's questions without correct answers
 const getTodayQuiz = async (req, res) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/New_York",
+    });
 
     const quiz = await DailyQuiz.findOne({
       where: { quiz_date: today },
@@ -103,13 +112,14 @@ const submitQuiz = async (req, res) => {
     const { dq_id, score, total, time_taken, answers } = req.body;
     const user_id = req.user?.user_id; // checks if user is logged basically or just null
 
-
-    if(user_id) {
+    if (user_id) {
       const alreadySubmitted = await QuizResult.findOne({
-        where: { user_id, dq_id }
-      })
-      if(alreadySubmitted) {
-        return res.status(400).json({ message: 'You have already submitted this quiz' })
+        where: { user_id, dq_id },
+      });
+      if (alreadySubmitted) {
+        return res
+          .status(400)
+          .json({ message: "You have already submitted this quiz" });
       }
     }
 
@@ -123,17 +133,17 @@ const submitQuiz = async (req, res) => {
     });
 
     // save each individual answer
-    if(user_id) {
-    const userAnswers = answers.map((a) => ({
-      qr_id: quizResult.qr_id,
-      question_id: a.question_id,
-      user_id: user_id || null,
-      selected_answer: a.selected_answer,
-      is_correct: a.is_correct,
-    }));
-    await UserAnswer.bulkCreate(userAnswers);
-    await updateStreak(user_id)
-  }
+    if (user_id) {
+      const userAnswers = answers.map((a) => ({
+        qr_id: quizResult.qr_id,
+        question_id: a.question_id,
+        user_id: user_id || null,
+        selected_answer: a.selected_answer,
+        is_correct: a.is_correct,
+      }));
+      await UserAnswer.bulkCreate(userAnswers);
+      await updateStreak(user_id);
+    }
 
     res.json({
       message: "Quiz submitted successfully",
@@ -147,33 +157,79 @@ const submitQuiz = async (req, res) => {
 };
 
 const getQuizStatus = async (req, res) => {
-    try {
-        const user_id = req.user?.user_id
-        const today = new Date().toISOString().split('T')[0]
+  try {
+    const user_id = req.user?.user_id;
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/New_York",
+    });
 
-        const quiz = await DailyQuiz.findOne({ where: { quiz_date: today } })
-        if (!quiz) {
-            return res.status(404).json({ message: 'No quiz today' })
-        }
-
-        if (!user_id) {
-            return res.json({ played: false, dq_id: quiz.dq_id })
-        }
-
-        const result = await QuizResult.findOne({
-            where: { user_id, dq_id: quiz.dq_id }
-        })
-
-        res.json({
-            played: !!result,
-            dq_id: quiz.dq_id,
-            result: result || null
-        })
-
-    } catch (err) {
-        console.error('Error getting quiz status', err)
-        res.status(500).json({ message: 'Server error' })
+    const quiz = await DailyQuiz.findOne({ where: { quiz_date: today } });
+    if (!quiz) {
+      return res.status(404).json({ message: "No quiz today" });
     }
-}
 
-module.exports = { getTodayQuiz, submitAnswer, submitQuiz, getQuizStatus};
+    if (!user_id) {
+      return res.json({ played: false, dq_id: quiz.dq_id });
+    }
+
+    const result = await QuizResult.findOne({
+      where: { user_id, dq_id: quiz.dq_id },
+    });
+
+    res.json({
+      played: !!result,
+      dq_id: quiz.dq_id,
+      result: result || null,
+    });
+  } catch (err) {
+    console.error("Error getting quiz status", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getQuizAnswers = async (req, res) => {
+  try {
+    const { dq_id } = req.params;
+    const questions = await Question.findAll({
+      where: { dq_id },
+      attributes: ["question_id", "correct_answer"],
+    });
+    res.json(questions);
+  } catch (err) {
+    console.error("Error getting answers", err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const getMyAnswers = async (req, res) => {
+  try {
+    const user_id = req.user.user_id;
+    const { dq_id } = req.params;
+
+    const userAnswers = await UserAnswer.findAll({
+      where: { user_id },
+      include: [
+        {
+          model: Question,
+          where: { dq_id },
+          attributes: ["question_id", "question_text"],
+        },
+      ],
+      attributes: ["question_id", "selected_answer", "is_correct"],
+    });
+
+    res.json(userAnswers);
+  } catch (err) {
+    console.error("Error getting user answers", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  getTodayQuiz,
+  submitAnswer,
+  submitQuiz,
+  getQuizStatus,
+  getQuizAnswers,
+  getMyAnswers,
+};

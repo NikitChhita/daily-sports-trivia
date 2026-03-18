@@ -58,7 +58,7 @@ const formatQuestion = (q, dq_id, difficulty) => {
 // Creating the daily quiz with a combination of Easy, Medium, and Hard Questions
 const fetchDailyQuiz = async () => {
     try {
-        const today = new Date().toISOString().split('T')[0]
+        const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
 
         //checking if the todays quiz already exists
         const existing = await DailyQuiz.findOne({ where: {quiz_date: today} })
@@ -95,7 +95,7 @@ const fetchDailyQuiz = async () => {
 
 
 // Cron schedular to fetch new daily quiz at midnight
-cron.schedule('0 0 * * *', () => {
+cron.schedule('0 5 * * *', () => {
     console.log('Running daily quiz fetch...')
     fetchDailyQuiz()
 })
