@@ -24,7 +24,9 @@ const updateStreak = async (user_id) => {
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const yesterdayStr = yesterday.toLocaleDateString("en-CA", {
+    timeZone: "America/New_York",
+  });
 
   // let since newStreaks value will be changing
   let newStreak;

@@ -1,3 +1,273 @@
+.results-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 15px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.results-modal {
+    background-color: #1f2937;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 875px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+.results-breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.results-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.results-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.results-date {
+    color: #9ca3af;
+    font-size: 0.675rem;
+}
+
+.results-score {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 9px;
+}
+
+.score-number {
+    font-size: 3.75rem;
+    font-weight: 700;
+    color: #22c55e;
+    line-height: 1;
+}
+
+.score-divider {
+    font-size: 2.25rem;
+    color: #6b7280;
+}
+
+.score-total {
+    font-size: 2.25rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.results-message {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.825rem;
+    margin-bottom: 18px;
+}
+
+.results-login-prompt {
+    text-align: center;
+    background-color: #111827;
+    border-radius: 6px;
+    padding: 9px;
+    color: #22c55e;
+    font-size: 0.675rem;
+    margin-bottom: 18px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.results-share {
+    margin-bottom: 21px;
+}
+
+.share-label {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 15px;
+    display: block;
+    margin-left: 278px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.share-btn {
+    flex: 1;
+    padding: 9px;
+    border-radius: 9px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    min-width: 50px;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+}
+
+
+.share-btn:hover {
+    opacity: 0.85;
+}
+
+.share-btn.twitter {
+    background-color: #000;
+    color: white;
+}
+
+.share-btn.message {
+    background-color: #22c55e;
+    color: white;
+}
+
+.results-breakdown {
+    border-top: 1px solid #374151;
+    padding-top: 18px;
+    margin-bottom: 18px;
+}
+
+.breakdown-label {
+    color: #9ca3af;
+    font-size: 0.638rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.breakdown-item {
+    display: flex;
+    gap: 11px;
+    padding: 11px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background-color: #111827;
+}
+
+.breakdown-icon {
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.breakdown-item.correct .breakdown-icon {
+    color: #22c55e;
+}
+
+.breakdown-item.wrong .breakdown-icon {
+    color: #ef4444;
+}
+
+.breakdown-content {
+    flex: 1;
+}
+
+.breakdown-question {
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.breakdown-answer {
+    font-size: 0.675rem;
+    font-weight: 600;
+    color: #9ca3af;
+}
+
+.breakdown-answer span {
+    color: #ef4444;
+}
+
+.breakdown-item.correct .breakdown-answer span {
+    font-size: 0.7rem;
+    color: #22c55e;
+}
+
+.breakdown-correct {
+    font-weight: 600;
+    font-size: 0.675rem;
+    color: #9ca3af;
+    margin-top: 3px;
+}
+
+.breakdown-correct span {
+    color: #22c55e;
+}
+
+.btn-home {
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    padding: 14px 60px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-home:hover {
+    background-color: #6d28d9;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.results-closing {
+    animation: fadeOut 0.2s ease forwards;
+}
+
+.share-btn.copy {
+    background-color: #eace15;
+    color: rgb(255, 255, 255);
+}
+
+.share-btn.copy:hover {
+    background-color:  #f1d72e;
+}
+
 @media (max-width: 768px) {
     .results-modal {
         padding: 20px;
@@ -23,4 +293,69 @@
         padding: 12px 30px;
         font-size: 0.8rem;
     }
+}
+
+.copied-toast {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 65%;
+    transform: translateX(-50%);
+    background-color: #f2f3f4;
+    border: 1px solid #374151;
+    color: #1b5530;
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border-radius: 5px;
+    white-space: nowrap;
+    animation: fadeInUp 0.2s ease forwards;
+    z-index: 10;
+}
+
+.results-stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 55px;
+    background-color: #111827;
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.results-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.results-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+}
+
+.results-stat-label {
+    font-size: 0.55rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.results-view-stats-btn {
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    padding: 7px 22px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 8px;
+}
+
+.results-view-stats-btn:hover {
+    background-color: #6d28d9;
 }

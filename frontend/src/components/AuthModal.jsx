@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Spinner } from "./ui/spinner";
+import myLogo from '../assets/myLogo.png'
 import "../CSS/AuthModal.css";
+import { Eye, EyeOff } from 'lucide-react'
 
 const AuthModal = ({ onClose }) => {
   const { login } = useAuth();
@@ -11,6 +13,7 @@ const AuthModal = ({ onClose }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
 
   // run once on mount
@@ -116,7 +119,7 @@ const AuthModal = ({ onClose }) => {
         {!loading && !success && (
           <>
             <div className="auth-logo">
-              <img src="/ai_img.png" alt="logo" />
+              <img src={myLogo} alt="logo" />
             </div>
 
             <h2 className="auth-title">
@@ -171,15 +174,24 @@ const AuthModal = ({ onClose }) => {
             </div>
 
             <div className="auth-field">
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                onKeyDown={ (e) => e.key === 'Enter' && handleSubmit() }
-              />
+                <label>Password</label>
+                <div className="auth-password-wrapper">
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        placeholder="••••••••"
+                        value={formData.password}
+                        onChange={handleChange}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                    />
+                    <button
+                        type="button"
+                        className="auth-password-toggle"
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                </div>
             </div>
 
             <button className="auth-submit" onClick={handleSubmit}>
@@ -190,9 +202,12 @@ const AuthModal = ({ onClose }) => {
               <span>OR</span>
             </div>
 
-            <button className="auth-google">
+            <button className="auth-google"  
+             onClick={() => window.location.href = 'http://localhost:8080/auth/google'}>
+
               <img src="/google-color-svgrepo-com.svg" width="30" height="30" alt="Google" />
               {isLogin ? "Sign in with Google" : "Sign up with Google"}
+
             </button>
 
             <p className="auth-toggle">

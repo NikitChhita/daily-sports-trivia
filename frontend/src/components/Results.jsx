@@ -3,13 +3,16 @@ import { useQuiz } from "../context/QuizContext";
 import { useAuth } from "../context/AuthContext";
 import "../CSS/Results.css";
 
-const Results = () => {
+const Results = ({ onShowStats, onLoginClick }) => {
   const { quiz, setQuiz, answers, score, resetQuiz } = useQuiz();
   const { isLoggedIn, token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [resultData, setResultData] = useState(null);
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [closing, setClosing] = useState(false);
+  const [copied, setCopied] = useState(false)
+  const [statsData, setStatsData] = useState(null)
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +35,7 @@ const Results = () => {
           });
           if (statsRes.ok) {
             const statsData = await statsRes.json();
+            setStatsData(statsData)
             const lastResult =
               statsData.score_history?.[statsData.score_history.length - 1];
 
@@ -123,6 +127,41 @@ const Results = () => {
     // keep quiz_finished in localStorage so button shows "View Results"
   };
 
+  // all functions for sharing to social media
+  const getShareText = () => {
+    const emojiGrid = finalAnswers
+      .map((a) => (a?.is_correct ? "🟩" : "⬜"))
+      .join("");
+    const url = "https://daily-sports-trivia.com";
+    const text = `${finalScore}/10 on today's Daily Sports Trivia! 🏆\n \n${emojiGrid}\n \nCan you beat me?\n \nPlay at: ${url}\n#DailySportsTrivia`;
+    return {
+      plain: text,
+      encoded: encodeURIComponent(text),
+    };
+  };
+
+  // twitter makes it seemless, other social medias are difficult
+  const shareToTwitter = () => {
+    const { encoded } = getShareText();
+    window.open(`https://twitter.com/intent/tweet?text=${encoded}`, "_blank");
+  };
+
+  // opting for just copying to clipboard since other apps like facebook are tricky
+  // Fixed issue of trying to copy a object instead of just the plain value with the text 
+
+  const copyToClipboard = async () => {
+      const { plain } = getShareText(); 
+      await navigator.clipboard.writeText(plain);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+  };
+
+  const emojiGrid = finalAnswers
+    .map((a) => (a?.is_correct ? "🟩" : "⬜"))
+    .join("");
+
+    
+
   return (
     <div
       className={`results-overlay ${closing ? "results-closing" : ""}`}
@@ -145,28 +184,49 @@ const Results = () => {
           <span className="score-divider">/</span>
           <span className="score-total">{total}</span>
         </div>
-
         <p className="results-message">{getScoreMessage()}</p>
 
-        {!isLoggedIn && (
-          <p className="results-login-prompt">
-            Login to track your stats and streaks
-          </p>
-        )}
+       {isLoggedIn && statsData ? (
+            <div className="results-stats-row">
+                <div className="results-stat-item">
+                    <span className="results-stat-value">{statsData.total_played}</span>
+                    <span className="results-stat-label">Quizzes</span>
+                </div>
+                <div className="results-stat-item">
+                    <span className="results-stat-value">{statsData.accuracy}%</span>
+                    <span className="results-stat-label">Accuracy</span>
+                </div>
+                <div className="results-stat-item">
+                    <span className="results-stat-value">🔥 {statsData.current_streak}</span>
+                    <span className="results-stat-label">Streak</span>
+                </div>
+                <div className="results-stat-item">
+                    <span className="results-stat-value">🏆 {statsData.longest_streak}</span>
+                    <span className="results-stat-label">Best Streak</span>
+                </div>
+                <button className="results-view-stats-btn" onClick={onShowStats}>
+                    View Stats
+                </button>
+            </div>
+        ) : !isLoggedIn ? (
+            <p className="results-login-prompt" onClick={onLoginClick}>
+                Login to track your stats and streaks
+            </p>
+        ) : null}
 
         <div className="results-share">
-          <p className="share-label">Share your score</p>
-          <div className="share-buttons">
-            <button className="share-btn twitter">𝕏 Twitter</button>
-            <button className="share-btn facebook">
-                <img src="/facebook-svgrepo-com.svg" width="18" height="18" alt="Facebook" />
-                Facebook
-                </button>
-            <button className="share-btn snapchat">
-                <img src="/snapchat-svgrepo-com.svg" width="18" height="18" alt="Snapchat" />
-                Snapchat
-                </button>
-            <button className="share-btn message">Message</button>
+          <p className="share-label">Share your score: {emojiGrid}</p>
+          <div className="share-buttons" style={{ position: 'relative'}}>
+            <button className="share-btn twitter" onClick={shareToTwitter}>
+              𝕏 Twitter
+            </button>
+            <button className="share-btn copy" onClick={copyToClipboard}>
+              <img src="/share-svgrepo-com.svg" alt="share" className="w-4.5 h-4.5"/>
+              Share Score
+            </button>
+
+              { /* notification modal to show its been copied  */ }
+              {copied && <div className="copied-toast">✓ Copied to clipboard! </div>}
           </div>
         </div>
 
@@ -180,7 +240,9 @@ const Results = () => {
                   key={q.question_id}
                   className={`breakdown-item ${answer?.is_correct ? "correct" : "wrong"}`}
                 >
+                  { /* i is the question index + 1 since its 0 based indexed */ }
                   <span className="breakdown-icon">
+                    {i + 1 + "). "}
                     {answer?.is_correct ? "✓" : "✗"}
                   </span>
                   <div className="breakdown-content">

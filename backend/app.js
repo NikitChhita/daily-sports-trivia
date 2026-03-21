@@ -6,6 +6,8 @@ const { fetchDailyQuiz } = require('./jobs/fetchDailyQuiz')
 const quizRoutes = require('./routes/quizRoutes')
 const authRoutes = require('./routes/authRoutes')
 const statsRoutes = require('./routes/statsRoutes')
+const passport = require('./config/passport')
+const googleAuthRoutes = require('./routes/googleAuthRoutes')
 
 
 
@@ -22,6 +24,8 @@ app.use(express.json())
 app.use('/quiz', quizRoutes)
 app.use('/auth', authRoutes)
 app.use('/stats', statsRoutes)
+app.use(passport.initialize())
+app.use('/auth', googleAuthRoutes)
 
 const startServer = async () => {
     await connectDB()

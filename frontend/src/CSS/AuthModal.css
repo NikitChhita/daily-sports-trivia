@@ -27,8 +27,8 @@
 }
 
 .auth-logo img {
-    width: 45px;
-    height: 45px;
+    width: 100px;
+    height: 80px;
     border-radius: 9px;
     mix-blend-mode: screen;
 }
@@ -269,4 +269,32 @@
     .auth-title {
         font-size: 1rem;
     }
+}
+
+.auth-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-password-wrapper input {
+    width: 100%;
+    padding-right: 36px;
+}
+
+.auth-password-toggle {
+    position: absolute;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+
+.auth-password-toggle:hover {
+    color: white;
 }

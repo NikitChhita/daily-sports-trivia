@@ -1,0 +1,133 @@
+.leaderboard-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-leaderboard {
+    background-color: rgba(71, 70, 78, 0);
+    color: #9ca3af;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1px solid #212b45;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+.btn-leaderboard:hover {
+    color: white;
+}
+
+.leaderboard-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    padding: 12px;
+    min-width: 220px;
+    z-index: 999;
+    animation: fadeInDown 0.15s ease forwards;
+}
+
+.leaderboard-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 0;
+    right: 0;
+    height: 6px;
+}
+
+.leaderboard-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.leaderboard-divider {
+    height: 1px;
+    background-color: #374151;
+    margin-bottom: 8px;
+}
+
+.leaderboard-loading {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    padding: 8px 0;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 6px;
+    border-radius: 6px;
+    transition: background-color 0.15s;
+}
+
+.leaderboard-row:hover {
+    background-color: #111827;
+}
+
+.leaderboard-rank {
+    font-size: 0.8rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.leaderboard-username {
+    flex: 1;
+    font-size: 0.78rem;
+    color: white;
+    font-weight: 500;
+}
+
+.leaderboard-score {
+    font-size: 0.72rem;
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.leaderboard-empty {
+    opacity: 0.4;
+}
+
+.leaderboard-placeholder {
+    color: #6b7280 !important;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .btn-leaderboard {
+        padding: 8px 14px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-leaderboard span {
+        display: none;
+    }
+    .btn-leaderboard {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    .leaderboard-wrapper {
+        display: none;
+    }
+}

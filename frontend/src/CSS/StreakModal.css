@@ -4,6 +4,7 @@
     padding: 17px;
     width: 231px;
     animation: fadeIn 1.2s ease;
+    position: relative;
 }
 
 .streak-panel-header {
@@ -40,6 +41,25 @@
     pointer-events: none;
 }
 
+.streak-close-btn {
+    background-color: #282b30;
+    border: none;
+    color: #e63626;
+    font-size: 0.7rem;
+    cursor: pointer;
+    padding: 1.8px 6px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    position: absolute;
+    top: 5px;
+    right: 4px;
+}
+
+.streak-close-btn:hover {
+    background-color: #374151;
+    color: #e63626;
+}
+
 .streak-calendar {
     margin-bottom: 14px;
 }
@@ -71,7 +91,7 @@
     justify-content: center;
     border-radius: 50%;
     position: relative;
-    border: 1px solid #374151;
+    border: 0.2px solid #374151;
 }
 
 .streak-day.empty {
@@ -179,4 +199,18 @@
     .streak-panel {
         display: none;
     }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.streak-closing {
+    animation: fadeOut 0.4s ease forwards;
+}
+
+.streak-panel-played {
+    border: 1px solid #22c55e;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
 }

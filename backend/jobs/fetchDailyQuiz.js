@@ -94,10 +94,17 @@ const fetchDailyQuiz = async () => {
 }
 
 
-// Cron schedular to fetch new daily quiz at midnight
-cron.schedule('0 5 * * *', () => {
-    console.log('Running daily quiz fetch...')
-    fetchDailyQuiz()
+// Cron schedular to fetch new daily quiz at midnight EST not UTC
+cron.schedule( '0 0 * * *', async () => {
+    console.log('Cron fired - running daily quiz fetch...')
+    try {
+        await fetchDailyQuiz()
+        console.log('Cron completed successfully')
+    } catch (err) {
+        console.error('Cron job failed:', err)
+    }
+}, {
+    timezone: 'America/New_York'
 })
 
 // Incase we want to run this manually

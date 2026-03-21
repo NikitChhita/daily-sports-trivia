@@ -1,4 +1,4 @@
-const { QuizResult, Streak, User, DailyQuiz } = require("../models/index");
+const { QuizResult, Streak, User, DailyQuiz, UserAnswer } = require("../models/index");
 // SQL helper functions for creating our get methods
 const { Op, fn, col, literal } = require("sequelize");
 
@@ -36,21 +36,52 @@ const getMyStats = async (req, res) => {
     // played_dates: all dates played per user, used for our calender streak view
     const played_dates = results.map(r => r.DailyQuiz.quiz_date)
 
-    // percentile  (how many users have a lower average score than this user)
-    const allAverages = await QuizResult.findAll({
-      attributes: ["user_id", [fn("AVG", col("score")), "average_score"]],
-      where: { user_id: { [Op.ne]: null } },
-      group: ["user_id"],
-    });
+        // logged in users excluding myself
+        const loggedInAverages = await QuizResult.findAll({
+            attributes: ["user_id", [fn("AVG", col("score")), "avg"]],
+            where: {
+                user_id: {
+                    [Op.and]: [
+                        { [Op.ne]: null },
+                        { [Op.ne]: user_id }
+                    ]
+                }
+            },
+            group: ["user_id"],
+        })
 
-    const totalUsers = allAverages.length;
-    const usersBelow = allAverages.filter(
-      (u) => parseFloat(u.dataValues.average_score) < parseFloat(average_score),
-    ).length;
+        // guests, each qr_id is a separate session since theres no guest_id
+        const guestAverages = await QuizResult.findAll({
+            attributes: ["qr_id", [fn("AVG", col("score")), "avg"]],
+            where: { user_id: null },
+            group: ["qr_id"],
+        })
 
-    // calculate percentile used for our percentile bar graph
-    const percentile =
-      totalUsers > 1 ? Math.round((usersBelow / (totalUsers - 1)) * 100) : 100;
+        const allOtherAverages = [
+            ...loggedInAverages.map(u => parseFloat(u.dataValues.avg)),
+            ...guestAverages.map(u => parseFloat(u.dataValues.avg))
+        ]
+
+        const totalOthers = allOtherAverages.length
+        const othersBelow = allOtherAverages.filter(avg => avg < parseFloat(average_score)).length
+
+        const percentile = totalOthers > 0
+            ? Math.round((othersBelow / totalOthers) * 100)
+            : 100
+
+            // Get the average over all correct and all answered questions
+            const accuracyData = await UserAnswer.findAll({
+            where: { user_id },
+            attributes: [
+                [fn('COUNT', col('ua_id')), 'total'],
+                [fn('SUM', literal('is_correct')), 'correct']
+            ]
+        })
+
+    const totalAnswers = parseInt(accuracyData[0].dataValues.total) || 0
+    const correctAnswers = parseInt(accuracyData[0].dataValues.correct) || 0
+    // Success Rate 
+    const accuracy = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0
 
     // our returning data of the user
     res.json({
@@ -62,6 +93,7 @@ const getMyStats = async (req, res) => {
       score_history,
       played_dates,
       percentile,
+      accuracy
     });
   } catch (err) {
     console.error("Error getting stats", err);
@@ -100,5 +132,7 @@ const getLeaderboard = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 module.exports = { getMyStats, getLeaderboard };

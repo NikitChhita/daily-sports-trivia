@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -32,7 +33,6 @@ body {
   width: 100%;
 }
 
-/* buttons */
 .btn-primary {
   background-color: #22c55e;
   color: white;
@@ -74,13 +74,26 @@ body {
     position: relative;
 }
 
-.streak-sidebar {
-    position: absolute;
-    right: 4rem;
-    top: 388px;
-    transform: translateY(-50%);
-    z-index: 10;
+.landing-layout {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 100vh;
 }
+
+.landing-layout > .hero {
+    grid-column: 2;
+}
+
+.streak-sidebar {
+    grid-column: 3;
+    justify-self: end;
+    padding-right: 2rem;
+    z-index: 10;
+    align-self: start;
+    padding-top: 30px;
+}
+
 
 
 .page-content {
@@ -121,6 +134,18 @@ body {
     height: 15px;
     flex-shrink: 0;
 }
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.streak-fading {
+    animation: fadeOut 0.4s ease forwards;
+}
+
+
+
 
 @theme inline {
   --animate-blink-cursor: blink-cursor 1.2s step-end infinite;
@@ -251,5 +276,15 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer base {
+  button:focus,
+  button:focus-visible,
+  a:focus,
+  a:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
   }
 }

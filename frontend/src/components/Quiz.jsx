@@ -204,31 +204,31 @@ const Quiz = () => {
       </div>
 
       <div className="quiz-right">
-        <div className="quiz-options">
+      <div className="quiz-options">
           {options.map((opt, i) => (
-            <button
-              key={opt}
-              className={getOptionClass(question[opt])}
-              onClick={() => handleOptionClick(question[opt])}
-            >
-              <span className="option-label">{labels[i]}</span>
-              <span className="option-text">{question[opt]}</span>
-            </button>
+              <button
+                  key={opt}
+                  className={getOptionClass(question[opt])}
+                  onClick={() => handleOptionClick(question[opt])}
+              >
+                  <span className="option-label">{labels[i]}</span>
+                  <span className="option-text">{question[opt]}</span>
+              </button>
           ))}
-        </div>
-
-        {submitted && (
-          <button className="btn-next" onClick={handleNext}>
-            {currentQuestion + 1 >= questions.length ? (
-              <>See Results ✦</>
-            ) : (
-              <>Next Question →</>
-            )}
-          </button>
-        )}
       </div>
-     </div>
+
+      <div className={`btn-next-wrapper ${submitted ? 'btn-next-visible' : ''}`}>
+          <button className="btn-next" onClick={handleNext}>
+              {currentQuestion + 1 >= questions.length ? (
+                  <>See Results ✦</>
+              ) : (
+                  <>Next Question →</>
+              )}
+          </button>
+      </div>
+      </div>
     </div>
+  </div>
   );
 };
 

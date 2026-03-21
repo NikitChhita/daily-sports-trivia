@@ -3,14 +3,16 @@ import { useQuiz } from "../context/QuizContext";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { TypingAnimation } from "../components/ui/typing-animation";
+import myLogo from '../assets/myLogo.png'
 import {  Accordion,  AccordionContent, AccordionItem,AccordionTrigger,} from "@/components/ui/accordion"
 
-const Hero = ({ onLoginClick, onPlay }) => {
+const Hero = ({ onLoginClick, onPlay, onShowStats }) => {
   const { gameState, setGameState } = useQuiz();
   const { isLoggedIn, token } = useAuth();
   const [playedToday, setPlayedToday] = useState(false);
   const [hasFinished, setHasFinished] = useState(() => localStorage.getItem("quiz_finished"))
   const hasProgress = localStorage.getItem("quiz_progress");
+
 
   // too much is currently determined on localstorage (might need to refactor)
   // check if logged in user has already played today
@@ -68,13 +70,10 @@ const Hero = ({ onLoginClick, onPlay }) => {
       <div
         className={`hero-content ${gameState !== "landing" ? "hero-hidden" : ""}`}
       >
-        <img src="/ai_img.png" alt="Sports Quiz Logo" className="hero-logo" />
+        <img src={myLogo} alt="Sports Quiz Logo" className="hero-logo" />
 
-        <h1 className="hero-title">
-          <TypingAnimation duration={80}>Sports Trivia</TypingAnimation>
-        </h1>
         <p className="hero-subtitle">
-          <TypingAnimation duration={50} delay={1200}>
+          <TypingAnimation duration={50}>
             Test your sports knowledge daily!
           </TypingAnimation>
         </p>
@@ -83,8 +82,8 @@ const Hero = ({ onLoginClick, onPlay }) => {
           <button className="btn-primary" onClick={handlePlay}>
             {getButtonLabel()}
           </button>
-          <button className="btn-secondary" onClick={onLoginClick}>
-            Log in
+          <button className="btn-secondary" onClick={isLoggedIn ? onShowStats : onLoginClick}>
+            {isLoggedIn ? "View Stats" : "Login In" }
           </button>
         </div>
 
@@ -105,12 +104,12 @@ const Hero = ({ onLoginClick, onPlay }) => {
           <AccordionItem value="item-1">
            <AccordionTrigger>Where do questions from?</AccordionTrigger>
               <AccordionContent>
-              Questions sourced from the Open Trivia Database
+              Questions are sourced from the Open Trivia Database
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-2">
-           <AccordionTrigger>What is the quiz's difficulty level?</AccordionTrigger>
+           <AccordionTrigger>What is the quiz difficulty level?</AccordionTrigger>
               <AccordionContent>
               10 questions daily containing mixed difficulty levels
               </AccordionContent>

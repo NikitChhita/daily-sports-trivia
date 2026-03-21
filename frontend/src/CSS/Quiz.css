@@ -233,3 +233,18 @@
         top: 70px;
     }
 }
+
+.btn-next-wrapper {
+    margin-top: 6px;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+    height: 57px; 
+}
+
+.btn-next-wrapper.btn-next-visible {
+    opacity: 1;
+    pointer-events: all;
+    visibility: visible;
+}
