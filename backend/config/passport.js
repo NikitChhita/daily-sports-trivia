@@ -14,7 +14,7 @@ const { Op } = require('sequelize')
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://18.222.147.45:8080/auth/google/callback'
+    callbackURL: 'https://api.daily-sports-trivia.com/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         // check if user already exists by google email
