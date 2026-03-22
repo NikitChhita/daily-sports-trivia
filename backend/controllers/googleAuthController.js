@@ -19,7 +19,7 @@ const googleCallback = (req, res) => {
         user: JSON.stringify(user)
     })
 
-    res.redirect(`http://localhost:5173?${params.toString()}`)
+    res.redirect(`${process.env.FRONTEND_URL}?${params.toString()}`)
 }
 
 module.exports = { googleCallback }

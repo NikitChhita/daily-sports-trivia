@@ -31,7 +31,7 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const res = await fetch("http://localhost:8080/quiz/today");
+        const res = await fetch("http://18.222.147.45:8080/quiz/today");
         const data = await res.json();
         setQuiz(data);
 
@@ -67,7 +67,7 @@ const Quiz = () => {
   const handleOptionClick = async (option) => {
     if (submitted) return;
     try {
-      const res = await fetch("http://localhost:8080/quiz/answer", {
+      const res = await fetch("http://18.222.147.45:8080/quiz/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -126,7 +126,7 @@ const Quiz = () => {
     // if its the last question we have to submit to our db
     if (isLastQuestion) {
       try {
-        await fetch("http://localhost:8080/quiz/submit", {
+        await fetch("http://18.222.147.45:8080/quiz/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

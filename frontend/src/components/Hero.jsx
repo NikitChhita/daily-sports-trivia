@@ -21,7 +21,7 @@ const Hero = ({ onLoginClick, onPlay, onShowStats }) => {
       
       try {
         // only send the token if logged in otherwise dont send the header (no point)
-        const res = await fetch("http://localhost:8080/quiz/status", {
+        const res = await fetch("http://18.222.147.45:8080/quiz/status", {
           ...(isLoggedIn && { headers: { Authorization: `Bearer ${token}` } })
         });
         const data = await res.json();

@@ -12,7 +12,7 @@ const StreakModal = ({ onClose }) => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch('http://localhost:8080/stats/me', {
+                const res = await fetch('http://18.222.147.45:8080/stats/me', {
                     headers: { Authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()

@@ -36,7 +36,7 @@ const Navbar = ({ onLoginClick, onShowStreak, onShowStats, showStreak }) => {
     useEffect(() => {
         const fetchQuizNumber = async () => {
             try {
-                const res = await fetch('http://localhost:8080/quiz/status')
+                const res = await fetch('http://18.222.147.45:8080/quiz/status')
                 const data = await res.json()
                 setQuizNumber(data.dq_id)
             } catch (err) {

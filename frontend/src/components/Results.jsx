@@ -18,19 +18,19 @@ const Results = ({ onShowStats, onLoginClick }) => {
     const fetchData = async () => {
       try {
         // always fetch today's quiz for the question breakdown
-        const quizRes = await fetch("http://localhost:8080/quiz/today");
+        const quizRes = await fetch("http://18.222.147.45:8080/quiz/today");
         const quizData = await quizRes.json();
         setQuiz(quizData);
 
         // fetch correct answers now that quiz is finished
         const answersRes = await fetch(
-          `http://localhost:8080/quiz/answers/${quizData.dq_id}`,
+          `http://18.222.147.45:8080/quiz/answers/${quizData.dq_id}`,
         );
         const correctData = await answersRes.json();
         setCorrectAnswers(correctData);
 
         if (isLoggedIn) {
-          const statsRes = await fetch("http://localhost:8080/stats/me", {
+          const statsRes = await fetch("http://18.222.147.45:8080/stats/me", {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (statsRes.ok) {
@@ -42,7 +42,7 @@ const Results = ({ onShowStats, onLoginClick }) => {
             if (lastResult) {
               // fetch user's actual answers from DB
               const myAnswersRes = await fetch(
-                `http://localhost:8080/quiz/my-answers/${quizData.dq_id}`,
+                `http://18.222.147.45:8080/quiz/my-answers/${quizData.dq_id}`,
                 { headers: { Authorization: `Bearer ${token}` } },
               );
               const myAnswersData = await myAnswersRes.json();

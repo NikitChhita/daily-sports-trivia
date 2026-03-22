@@ -12,7 +12,7 @@ const Leaderboard = () => {
         if (data.length > 0) return // don't refetch if already loaded
         setLoading(true)
         try {
-            const res = await fetch('http://localhost:8080/stats/leaderboard')
+            const res = await fetch('http://18.222.147.45:8080/stats/leaderboard')
             const json = await res.json()
             setData(json)
         } catch (err) {
