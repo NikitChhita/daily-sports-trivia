@@ -16,6 +16,8 @@ dotenv.config();
 
 const { User, DailyQuiz, Question, QuizResult, UserAnswer, Streak } = require('./models/index')
 const app = express();
+const helmet = require('helmet')
+app.use(helemt())
 
 app.use(cors());
 app.use(express.json())
