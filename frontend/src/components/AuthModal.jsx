@@ -54,8 +54,8 @@ const AuthModal = ({ onClose }) => {
     setLoading(true);
 
     const endpoint = isLogin
-      ? "http://18.222.147.45:8080/auth/login"
-      : "http://18.222.147.45:8080/auth/register";
+      ? "https://api.daily-sports-trivia.com/auth/login"
+      : "https://api.daily-sports-trivia.com/auth/register";
 
     const body = isLogin
       ? { email: formData.email, password: formData.password }
@@ -203,7 +203,7 @@ const AuthModal = ({ onClose }) => {
             </div>
 
             <button className="auth-google"  
-             onClick={() => window.location.href = 'http://18.222.147.45:8080/auth/google'}>
+             onClick={() => window.location.href = 'https://api.daily-sports-trivia.com/auth/google'}>
 
               <img src="/google-color-svgrepo-com.svg" width="30" height="30" alt="Google" />
               {isLogin ? "Sign in with Google" : "Sign up with Google"}
