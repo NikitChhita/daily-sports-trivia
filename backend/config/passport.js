@@ -38,7 +38,7 @@ passport.use(new GoogleStrategy({
             username: profile.displayName.replace(/\s/g, '_').toLowerCase(),
             email: profile.emails[0].value,
             password: 'google_oauth_no_password',
-            google_id: profile_id
+            google_id: profile.id
         })
 
         // create streak record for the new user 
