@@ -40,12 +40,13 @@ Built by [Nikit Chhita](https://github.com/NikitChhita) — full-stack, solo, fr
 
 ## 🚀 Screens of the website
 
+<img src="./assets/Results.png" width="800" alt="Results Screen" />
 
-![Results Screen](./assets/Results.png)
-
-![Stats Modal](./assets/Stats.png)
-
-![Streak Modal](./assets/Streak.png)
+### Stats & Activity
+<p align="left">
+  <img src="./assets/Stats.png" width="350" alt="Stats Modal" />
+  <img src="./assets/Streak.png" width="350" alt="Streak Modal" />
+</p>
 
 ---
 
