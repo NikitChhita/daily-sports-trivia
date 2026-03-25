@@ -16,21 +16,21 @@
 
 ## 🌟 Highlights
 
-- 🗓️ A brand new 10-question quiz drops every day at midnight — same questions, every player, worldwide
-- 🔥 Track your daily streak with a calendar heatmap — don't break the chain
-- 📊 Personal stats: accuracy %, percentile ring, and a score-over-time chart
-- 🏅 Leaderboard ranking against other registered players
-- 📤 Share your result as a Wordle-style emoji grid
+- 🗓️ A brand new 10-question quiz drops every day at midnight (same questions for every player, worldwide)
+- 🔥 Tracks your daily streak with a calendar heatmap 
+- 📊 Personal stats: accuracy %, percentile rank among users, and a score-over-time chart
+- 🏅 Leaderboard ranking against other players (registered only)
+- 📤 Share your result as an emoji grid
 - 🔐 Sign in with Google or create an account with email and password
-- ⏱️ Live countdown to the next quiz reset
+- ⏱️ Live countdown to the next quiz reset displayed on the navbar
 
 ---
 
 ## ℹ️ Overview
 
-Daily Sports Trivia delivers one fresh 10-question sports quiz per day — automatically fetched, stored, and served to every player worldwide at midnight. Questions span easy, medium, and hard difficulty across all major sports.
+Daily Sports Trivia delivers a new 10-question sports quiz per day. It is automatically fetched, stored, and served to every player at midnight. Questions span as a dynamic easy, medium, and hard difficulty across all major sports.
 
-Play as a guest or create an account to track your streak, compare your score against other players, and dig into your personal stats.
+You can play as a guest or create an account to track your streak, compare your score against other players, and view your personal stats.
 
 ### 👤 Author
 
@@ -49,21 +49,21 @@ Built by [Nikit Chhita](https://github.com/NikitChhita) — full-stack, solo, fr
 
 ---
 
-## 🛠️ Built with
+## 🛠️ Tech Stack
 
 **Frontend** — React 18, Vite, shadcn/ui, Tailwind CSS, Recharts
 
 **Backend** — Node.js, Express, Sequelize ORM, Passport.js, JWT, node-cron
 
-**Database** — MySQL 8 on AWS RDS
+**Database** — MySQL 8 on AWS RDS (May migrate to mySQL ran on EC2 Server in the future)
 
-**Auth** — Google OAuth 2.0 + bcrypt email/password
+**Auth** — Google OAuth 2.0 + bcrypt email/password 
 
-**Infrastructure** — AWS EC2 · RDS · S3 · CloudFront
+**Hosting Infrastructure** — AWS: EC2, RDS, S3, CloudFront 
 
 ---
 
-## ⬇️ Run locally
+## ⬇️ Steps to run locally
 
 Requires **Node.js 20+** and **MySQL 8**.
 
