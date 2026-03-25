@@ -1,10 +1,16 @@
 # 🏆 Daily Sports Trivia
 
-[![Live](https://img.shields.io/badge/live-daily--sports--trivia.com-22c55e?style=flat-square)](https://daily-sports-trivia.com)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
-[![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react)](https://react.dev)
-[![Node](https://img.shields.io/badge/Node.js-20-339933?style=flat-square&logo=node.js)](https://nodejs.org)
-[![AWS](https://img.shields.io/badge/deployed-AWS-FF9900?style=flat-square&logo=amazon-aws)](https://daily-sports-trivia.com)
+<p align="left">
+  <a href="https://daily-sports-trivia.com">
+    <img src="https://img.shields.io/badge/LIVE_SITE-daily--sports--trivia.com-22c55e?style=for-the-badge" alt="Live Site">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License">
+  </a>
+  <img src="https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react" alt="React">
+  <img src="https://img.shields.io/badge/Node.js-20-339933?style=for-the-badge&logo=node.js" alt="Node">
+  <img src="https://img.shields.io/badge/AWS-Deployed-FF9900?style=for-the-badge&logo=amazon-aws" alt="AWS">
+</p>
 
 > Think you know sports? One quiz. Every day. Test your knowledge.
 
@@ -44,8 +50,8 @@ Built by [Nikit Chhita](https://github.com/NikitChhita) — full-stack, solo, fr
 
 ### Stats & Activity
 <p align="left">
-  <img src="./assets/Stats.png" width="350" alt="Stats Modal" />
-  <img src="./assets/Streak.png" width="350" alt="Streak Modal" />
+    <img src="./assets/Streak.png" width="280" alt="Streak Modal" />
+  <img src="./assets/Stats.png" width="720" alt="Stats Modal" />
 </p>
 
 ---
